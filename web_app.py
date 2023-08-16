@@ -169,123 +169,126 @@ if __name__ == "__main__":
         comments = []
         st.write('')
         st.write('')
-        product = st.text_input("Enter any product of your choice available for sale with Flipkart:","Type here")       
-        st.error('Please make sure the product is avaiable for sale with Flipkart, otherwise you will get the response for the product which flikart supplies as alternative..', icon="🚨")
-        st.write('')
-        st.write('')
-        if st.button(f'Fetch the buyer reviews for {product}.....',use_container_width=True,key=1):
-            comments, ratings = get_reviews(product)
-            random.shuffle(comments)
-            st.success(f'Buyer reviews for the {product} fetched successfully from Flipkart website...', icon="✅")     
+        product = st.text_input("Enter any product of your choice available for sale with Flipkart:","Type here") 
+        if len(product)>=5:
+            st.error('Please make sure the product is avaiable for sale with Flipkart, otherwise you will get the response for the product which flikart supplies as alternative..', icon="🚨")
             st.write('')
             st.write('')
-            st.success('Passing the fetched reviews to ChatGPT-3.5 for it to classify them as Positive or Negative')
-            st.write('')
-            st.write('')
-            col001,col002 = st.columns([10,10])
-            with col001:
-                st.markdown("""
-                    <style>
-                    @import url('https://fonts.googleapis.com/css2?family=Agdasima');
-                    .custom-text-4 { font-family: 'Agdasima', sans-serif; font-size: 30px;color: #82e0aa  }
-                    </style>
-                    <p class="custom-text-4">Displaying the positive reviews </p>
-                    """, unsafe_allow_html=True)
-                positive_reviews = get_pos_senti(comments)
-                reviews = positive_reviews.replace('-','')
-                list_rev = reviews.split(',')
-                df = pd.DataFrame(list_rev)
-                df_cleaned = df[df[0].str.strip() != '']
-                pattern = r'Assistant: \w+'
-                mask = df_cleaned[0].str.contains(pattern)
-                df_pos = df_cleaned.loc[~mask]
-                df_pos.rename(columns={0:'Positive reviews'}, inplace=True)
-                st.table(df_pos)
-            with col002:
-                st.markdown("""
-                    <style>
-                    @import url('https://fonts.googleapis.com/css2?family=Agdasima');
-                    .custom-text-5 { font-family: 'Agdasima', sans-serif; font-size: 30px;color:#e74c3c}
-                    </style>
-                    <p class="custom-text-5">Displaying the negative reviews </p>
-                    """, unsafe_allow_html=True)
-                negative_reviews = get_neg_senti(comments)
-                reviews2 = negative_reviews.replace('-','')
-                list_rev2 = reviews2.split(',')
-                df2 = pd.DataFrame(list_rev2)
-                df_cleaned2 = df2[df2[0].str.strip() != '']
-                pattern = r'Assistant: \w+'
-                mask = df_cleaned2[0].str.contains(pattern)
-                df_neg = df_cleaned2.loc[~mask]
-                df_neg.rename(columns={0:'Negative reviews'}, inplace=True)
-                st.table(df_neg)
-            st.write('')
-            st.write('')
-            st.success('Creating a wordcloud out of most frequent words in positive and negative reviews')
-            st.write('')
-            st.write('')
-            col003,col004 = st.columns([10,10],gap="medium")
-            with col003:
-                st.markdown("""
-                    <style>
-                    @import url('https://fonts.googleapis.com/css2?family=Agdasima');
-                    .custom-text-7 { font-family: 'Agdasima', sans-serif; font-size: 30px;color: #229954 }
-                    </style>
-                    <p class="custom-text-7">Most frequent words in Positive reviews</p>
-                    """, unsafe_allow_html=True)
+            if st.button(f'Fetch the buyer reviews for {product}.....',use_container_width=True,key=1):
+                comments, ratings = get_reviews(product)
+                random.shuffle(comments)
+                st.success(f'Buyer reviews for the {product} fetched successfully from Flipkart website...', icon="✅")     
                 st.write('')
                 st.write('')
-                all_pos = ' '.join(df_pos['Positive reviews'])
-                stop_words = set(stopwords.words('english'))
-                words = re.findall(r'\w+', all_pos.lower())
-                additional_stop_words = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9','10'
-                                        '11','12','13','14','15','16','17','18','19','20','21','22','23','24','25'}
-                all_stop_words = stop_words.union(additional_stop_words)
-                filtered_words = [word for word in words if word not in all_stop_words]
-                word_counts = Counter(filtered_words)
-                top_n = 20
-                top_words = word_counts.most_common(top_n)
-                words_only = [word for word, _ in top_words]
-                text = ' '.join(words_only)
-                wordcloud = WordCloud(width=800, height=800, background_color='black').generate(text)
-                st.image(wordcloud.to_array(),use_column_width=True)
-            with col004:
+                st.success('Passing the fetched reviews to ChatGPT-3.5 for it to classify them as Positive or Negative')
+                st.write('')
+                st.write('')
+                col001,col002 = st.columns([10,10])
+                with col001:
+                    st.markdown("""
+                        <style>
+                        @import url('https://fonts.googleapis.com/css2?family=Agdasima');
+                        .custom-text-4 { font-family: 'Agdasima', sans-serif; font-size: 30px;color: #82e0aa  }
+                        </style>
+                        <p class="custom-text-4">Displaying the positive reviews </p>
+                        """, unsafe_allow_html=True)
+                    positive_reviews = get_pos_senti(comments)
+                    reviews = positive_reviews.replace('-','')
+                    list_rev = reviews.split(',')
+                    df = pd.DataFrame(list_rev)
+                    df_cleaned = df[df[0].str.strip() != '']
+                    pattern = r'Assistant: \w+'
+                    mask = df_cleaned[0].str.contains(pattern)
+                    df_pos = df_cleaned.loc[~mask]
+                    df_pos.rename(columns={0:'Positive reviews'}, inplace=True)
+                    st.table(df_pos)
+                with col002:
+                    st.markdown("""
+                        <style>
+                        @import url('https://fonts.googleapis.com/css2?family=Agdasima');
+                        .custom-text-5 { font-family: 'Agdasima', sans-serif; font-size: 30px;color:#e74c3c}
+                        </style>
+                        <p class="custom-text-5">Displaying the negative reviews </p>
+                        """, unsafe_allow_html=True)
+                    negative_reviews = get_neg_senti(comments)
+                    reviews2 = negative_reviews.replace('-','')
+                    list_rev2 = reviews2.split(',')
+                    df2 = pd.DataFrame(list_rev2)
+                    df_cleaned2 = df2[df2[0].str.strip() != '']
+                    pattern = r'Assistant: \w+'
+                    mask = df_cleaned2[0].str.contains(pattern)
+                    df_neg = df_cleaned2.loc[~mask]
+                    df_neg.rename(columns={0:'Negative reviews'}, inplace=True)
+                    st.table(df_neg)
+                st.write('')
+                st.write('')
+                st.success('Creating a wordcloud out of most frequent words in positive and negative reviews')
+                st.write('')
+                st.write('')
+                col003,col004 = st.columns([10,10],gap="medium")
+                with col003:
+                    st.markdown("""
+                        <style>
+                        @import url('https://fonts.googleapis.com/css2?family=Agdasima');
+                        .custom-text-7 { font-family: 'Agdasima', sans-serif; font-size: 30px;color: #229954 }
+                        </style>
+                        <p class="custom-text-7">Most frequent words in Positive reviews</p>
+                        """, unsafe_allow_html=True)
+                    st.write('')
+                    st.write('')
+                    all_pos = ' '.join(df_pos['Positive reviews'])
+                    stop_words = set(stopwords.words('english'))
+                    words = re.findall(r'\w+', all_pos.lower())
+                    additional_stop_words = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9','10'
+                                            '11','12','13','14','15','16','17','18','19','20','21','22','23','24','25'}
+                    all_stop_words = stop_words.union(additional_stop_words)
+                    filtered_words = [word for word in words if word not in all_stop_words]
+                    word_counts = Counter(filtered_words)
+                    top_n = 20
+                    top_words = word_counts.most_common(top_n)
+                    words_only = [word for word, _ in top_words]
+                    text = ' '.join(words_only)
+                    wordcloud = WordCloud(width=800, height=800, background_color='black').generate(text)
+                    st.image(wordcloud.to_array(),use_column_width=True)
+                with col004:
+                    st.markdown("""
+                        <style>
+                        @import url('https://fonts.googleapis.com/css2?family=Agdasima');
+                        .custom-text-8 { font-family: 'Agdasima', sans-serif; font-size: 30px;color: #e74c3c }
+                        </style>
+                        <p class="custom-text-8">Most frequent words in Negative reviews</p>
+                        """, unsafe_allow_html=True)
+                    st.write('')
+                    st.write('')
+                    all_neg = ' '.join(df_neg['Negative reviews'])
+                    stop_words = set(stopwords.words('english'))
+                    words = re.findall(r'\w+', all_neg.lower())
+                    additional_stop_words = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9','10'
+                                            '11','12','13','14','15','16','17','18','19','20','21','22','23','24','25'}
+                    all_stop_words = stop_words.union(additional_stop_words)
+                    filtered_words = [word for word in words if word not in all_stop_words]
+                    word_counts = Counter(filtered_words)
+                    top_n = 20
+                    top_words = word_counts.most_common(top_n)
+                    words_only = [word for word, _ in top_words]
+                    text = ' '.join(words_only)
+                    wordcloud = WordCloud(width=800, height=800, background_color='black').generate(text)
+                    st.image(wordcloud.to_array(),use_column_width=True)
+                st.write('')
+                st.write('') 
                 st.markdown("""
-                    <style>
-                    @import url('https://fonts.googleapis.com/css2?family=Agdasima');
-                    .custom-text-8 { font-family: 'Agdasima', sans-serif; font-size: 30px;color: #e74c3c }
-                    </style>
-                    <p class="custom-text-8">Most frequent words in Negative reviews</p>
-                    """, unsafe_allow_html=True)
-                st.write('')
-                st.write('')
-                all_neg = ' '.join(df_neg['Negative reviews'])
-                stop_words = set(stopwords.words('english'))
-                words = re.findall(r'\w+', all_neg.lower())
-                additional_stop_words = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9','10'
-                                        '11','12','13','14','15','16','17','18','19','20','21','22','23','24','25'}
-                all_stop_words = stop_words.union(additional_stop_words)
-                filtered_words = [word for word in words if word not in all_stop_words]
-                word_counts = Counter(filtered_words)
-                top_n = 20
-                top_words = word_counts.most_common(top_n)
-                words_only = [word for word, _ in top_words]
-                text = ' '.join(words_only)
-                wordcloud = WordCloud(width=800, height=800, background_color='black').generate(text)
-                st.image(wordcloud.to_array(),use_column_width=True)
-            st.write('')
-            st.write('') 
-            st.markdown("""
-                    <style>
-                    @import url('https://fonts.googleapis.com/css2?family=Agdasima');
-                    .custom-text-9 { font-family: 'Agdasima', sans-serif; font-size: 30px;color: #f4d03f }
-                    </style>
-                    <p class="custom-text-9">Summarizing the positive and negative reviews using ChatGPT-3.5 </p>
-                    """, unsafe_allow_html=True)
-            st.write('')   
-            st.write('')   
-            qualities = get_pos_neg_things(all_pos+all_neg)
-            st.write(qualities)
+                        <style>
+                        @import url('https://fonts.googleapis.com/css2?family=Agdasima');
+                        .custom-text-9 { font-family: 'Agdasima', sans-serif; font-size: 30px;color: #f4d03f }
+                        </style>
+                        <p class="custom-text-9">Summarizing the positive and negative reviews using ChatGPT-3.5 </p>
+                        """, unsafe_allow_html=True)
+                st.write('')   
+                st.write('')   
+                qualities = get_pos_neg_things(all_pos+all_neg)
+                st.write(qualities)
+        else:
+            st.write('Please enter a valid product name for webscrapping')
         st.write('')
         st.write('')
         st.write('')

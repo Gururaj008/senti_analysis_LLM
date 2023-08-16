@@ -173,10 +173,10 @@ if __name__ == "__main__":
         st.error('Please make sure the product is avaiable for sale with Flipkart, otherwise you will get the response for the product which flikart supplies as alternative..', icon="🚨")
         st.write('')
         st.write('')
-            if st.button(f'Fetch the buyer reviews for {product}.....',use_container_width=True,key=1):
-                if len(product) < 5 :
-                    st.write('Please enter a product name with atleast 5 characters in it to proceed further')
-                else:
+        if st.button(f'Fetch the buyer reviews for {product}.....',use_container_width=True,key=1):
+            if len(product) < 5 :
+                st.write('Please enter a product name with atleast 5 characters in it to proceed further')
+            else:
                     comments, ratings = get_reviews(product)
                     random.shuffle(comments)
                     st.success(f'Buyer reviews for the {product} fetched successfully from Flipkart website...', icon="✅")     

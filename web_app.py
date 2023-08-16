@@ -169,8 +169,8 @@ if __name__ == "__main__":
         comments = []
         st.write('')
         st.write('')
-        product = st.text_input("Enter any product of your choice available for sale with Flipkart:","Type here") 
-        st.error('Please make sure the product is avaiable for sale with Flipkart, otherwise you will get the response for the product which flikart supplies as alternative..', icon="🚨")
+        product = st.text_input("Enter any product of your choice available for sale with Flipkart:","") 
+        st.error('Please make sure the product is avaiable for sale with Flipkart, otherwise you will get the response for the product which flipkart sells as alternative..', icon="🚨")
         st.write('')
         st.write('')
         if st.button(f'Fetch the buyer reviews for {product}.....',use_container_width=True,key=1):

@@ -14,7 +14,7 @@ import nltk
 nltk.download('stopwords')
 from streamlit_option_menu import option_menu
 nltk.download('stopwords')
-openai.api_key="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"
+openai.api_key= st.secrets['auth_key']
 
 def get_reviews(prod):
     base_URL = 'https://www.flipkart.com/search?q=' 

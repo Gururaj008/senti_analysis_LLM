@@ -59,7 +59,7 @@ def get_reviews(prod):
     return all_comments, all_ratings
 
 def get_pos_senti(comments):
-    msg = f"With utmost care, identify only the positive sentiment in the reviews and return them"
+    msg = f"With utmost care, identify only the positive sentiment in the reviews and return them, remove all negative reviews"
     messages = [
         {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": msg},
@@ -79,7 +79,7 @@ def get_pos_senti(comments):
     return review
 
 def get_neg_senti(comments):
-    msg = f"With utmost care, identify only the negative sentiment in the reviews and return them"
+    msg = f"With utmost care, identify only the negative sentiment in the reviews and return them, remove all positive reviews"
     messages = [
         {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": msg},
